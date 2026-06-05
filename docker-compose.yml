@@ -1,0 +1,83 @@
+services:
+  tak-db:
+    build:
+      context: .
+      dockerfile: Dockerfile.takserver-db
+    container_name: tak_postgres
+    ports:
+      - "127.0.0.1:5432:5432"
+    environment:
+      - POSTGRES_PASSWORD=atakatak
+    networks:
+      - tak-network
+    volumes:
+      - tak_db_data:/var/lib/postgresql/data
+      - ./tak:/opt/tak
+
+  tak-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.takserver
+    container_name: tak_core
+    depends_on:
+      - tak-db
+    ports:
+      - "8089:8089"
+      - "8446:8446"
+      - "8443:8443"
+      - "8444:8444"
+    networks:
+      - tak-network
+    volumes:
+      - ./tak:/opt/tak
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: tak_grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - tak-network
+
+  tak-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile.bot
+    container_name: tak_bot
+    depends_on:
+      - tak-server
+    restart: unless-stopped
+    environment:
+      - TAK_HOST=tak-server
+      - PYTHONUNBUFFERED=1
+    networks:
+      - tak-network
+    volumes:
+      - ./microservices:/app
+
+  tak-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.bot
+    container_name: tak_worker
+    depends_on:
+      - tak-server
+    restart: unless-stopped
+    command: ["python", "task_worker.py"]
+    environment:
+      - TAK_HOST=tak-server
+      - PYTHONUNBUFFERED=1
+    networks:
+      - tak-network
+    volumes:
+      - ./microservices:/app
+
+networks:
+  tak-network:
+    driver: bridge
+
+volumes:
+  tak_db_data:
+  grafana_data:

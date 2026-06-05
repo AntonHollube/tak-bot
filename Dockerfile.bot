@@ -1,0 +1,14 @@
+# Nutze ein schlankes Python-Image
+FROM python:3.11-slim
+
+# Setze das Arbeitsverzeichnis im Container
+WORKDIR /app
+
+# Installiere alle benötigten externen Python-Module
+RUN pip install --no-cache-dir h3 requests meshtastic protobuf python-dotenv
+
+# Kopiere den gesamten Inhalt des Unterordners in den Container
+COPY ./microservices /app/
+
+# Führe das Skript aus
+CMD ["python", "manager.py"]

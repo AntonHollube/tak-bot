@@ -1,0 +1,26 @@
+# Environment variables
+.env
+
+# Certs
+certs/*.key
+certs/*.pem
+certs/*.p12
+*.p12
+
+# Logs
+*.log
+logs/
+
+# Python Cache und Virtuelle Umgebungen
+__pycache__/
+*.pyc
+venv/
+.venv/
+
+# temporäre Dateien
+data/*.json
+
+# TAK Core config und Zertifikate
+/tak/
+tak-db-data/
+grafana_data/
