@@ -9,7 +9,6 @@ certs/*.p12
 
 # Logs
 *.log
-logs/
 
 # Python Cache und Virtuelle Umgebungen
 __pycache__/
