@@ -52,6 +52,8 @@ services:
     environment:
       - TAK_HOST=tak-server
       - PYTHONUNBUFFERED=1
+    devices:
+      - "/dev/ttyACM0:/dev/ttyACM0" 
     networks:
       - tak-network
     volumes:
