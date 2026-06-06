@@ -33,8 +33,8 @@ def build_cot_event(uid, cot_type, lat, lon, callsign, remarks="", color="-16776
 
     detail = ET.SubElement(event, "detail")
 
-    remarks.elem = ET.SubElement(detail, "remarks")
-    remarks.elem.text = str(remarks)
+    remarks_elem = ET.SubElement(detail, "remarks")
+    remarks_elem.text = str(remarks)
 
     ET.SubElement(detail, "color", {"argb": str(color)})
     ET.SubElement(detail, "contact", {"callsign": str(callsign)})
