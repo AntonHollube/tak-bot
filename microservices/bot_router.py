@@ -102,7 +102,7 @@ def route_command(cmd_string, lat, lon, target_uid):
             
             xml = build_cot_event(
                 uid=f"bot-mark-{m['name']}-{m['lat']}",
-                cot_type=m.get('type', 'b-m-p-s-m'),
+                cot_type=m.get('type', 'a-u-G'),
                 lat=m['lat'],
                 lon=m['lon'],
                 callsign=f"{m['name']} (Bot)",
