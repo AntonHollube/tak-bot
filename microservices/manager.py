@@ -29,7 +29,7 @@ from bot_router import route_command
 load_dotenv()
 
 TAK_HOST = os.getenv("TAK_HOST", "127.0.0.1")
-TAK_STREAM_PORT = 8089
+TAK_STREAM_PORT = 8444
 
 CERT_DIR = os.path.join(ROOT_DIR, "certs")
 CLIENT_CERT = os.path.join(CERT_DIR, "bot.pem")
@@ -193,6 +193,7 @@ def start_manager():
                     sock.close()
                 except OSError:
                     pass
+            time.sleep(2)
 
 
 if __name__ == "__main__":
