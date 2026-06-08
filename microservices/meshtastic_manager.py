@@ -162,6 +162,10 @@ def on_receive(packet, interface):
     elif cmd.startswith('?p'):
         logging.info("[*] LoRa RX: '?p'. Suche Pegel...")
         reply_msg = get_closest_poi(lat, lon, "pegel.json", "Pegel")
+
+    elif cmd.startswith('?h'):
+        logging.info("[*] LoRa RX: '?h'. Sende Hilfe...")
+        reply_msg = "?w = Wetter, ?p = Pegel, ?k = Klinik, ?i = WLAN, ?o = Position"
         
     elif cmd.startswith('?k'):
         logging.info("[*] LoRa RX: '?k'. Suche Klinik...")
