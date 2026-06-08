@@ -1,7 +1,7 @@
 {
   "MIL_STD_2525": {
     "pegel": "a-u-G", 
-    "bridge": "S*G*IMNB--H****", 
+    "bridge": "a-u-G-I-M-E-B", 
     "weather": "b-m-p-w",
     "airplane": "a-u-A-C", 
     "kritis_hospital": "a-n-G-I-M",
