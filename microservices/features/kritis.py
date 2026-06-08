@@ -26,7 +26,7 @@ def execute_tunnel(lat, lon, args):
             'color': "-8355712", # Dunkelgrau markieren
             'status': "Tunnel", 'dist': entry["dist"],
             'remarks': f"Tunnel/Unterfuehrung | Beleuchtet: {lit} | Distanz: {entry['dist']}m",
-            'type': SYMBOLOGY.get("kritis_tunnel", "a-u-G-I-c-t") # MIL-STD Underground
+            'type': SYMBOLOGY.get("kritis_tunnel", "a-u-U") # MIL-STD Underground
         })
 
     if not results: 

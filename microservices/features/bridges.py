@@ -89,7 +89,7 @@ def _core_logic(lat, lon, args, with_images=False):
             'name': name, 'lat': entry["lat"], 'lon': entry["lon"],
             'color': color, 'status': status, 'dist': entry["dist"],
             'remarks': remarks, 'image_hash': image_hash,
-            'type': SYMBOLOGY.get("bridge", "a-u-G")
+            'type': SYMBOLOGY.get("bridge", "S*G*IMNB--H****")
         })
 
     if not found_bridges:
