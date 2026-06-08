@@ -32,8 +32,8 @@ TAK_HOST = os.getenv("TAK_HOST", "127.0.0.1")
 TAK_STREAM_PORT = 8089
 
 CERT_DIR = os.path.join(ROOT_DIR, "certs")
-CLIENT_CERT = os.path.join(CERT_DIR, "admin_chain.pem")
-CLIENT_KEY = os.path.join(CERT_DIR, "admin_unencrypted.key")
+CLIENT_CERT = os.path.join(CERT_DIR, "bot.pem")
+CLIENT_KEY = os.path.join(CERT_DIR, "bot.key")
 
 xml_queue = queue.Queue(maxsize=100)
 
