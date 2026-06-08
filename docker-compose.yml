@@ -52,8 +52,6 @@ services:
     environment:
       - TAK_HOST=tak-server
       - PYTHONUNBUFFERED=1
-    devices:
-      - "/dev/ttyACM0:/dev/ttyACM0" 
     networks:
       - tak-network
     volumes:
@@ -71,6 +69,25 @@ services:
     environment:
       - TAK_HOST=tak-server
       - PYTHONUNBUFFERED=1
+    networks:
+      - tak-network
+    volumes:
+      - ./microservices:/app
+
+  tak-mesh-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile.bot
+    container_name: tak_mesh_gateway
+    depends_on:
+      - tak-server
+    restart: unless-stopped
+    command: ["python", "meshtastic_manager.py"] 
+    environment:
+      - MESH_PORT=/dev/ttyACM0
+      - PYTHONUNBUFFERED=1
+    devices:
+      - "/dev/ttyACM0:/dev/ttyACM0" 
     networks:
       - tak-network
     volumes:
