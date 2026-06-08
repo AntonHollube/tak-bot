@@ -4,7 +4,7 @@ import logging
 
 # Finde das Hauptverzeichnis des Projekts
 ROOT_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-CONFIG_FILE = os.path.join(ROOT_DIR, "cot_symbology.json")
+CONFIG_FILE = os.path.join(ROOT_DIR, "core/cot_symbology.json")
 
 def load_symbology():
     """Lädt die CoT-Symbole aus der JSON-Datei in den Arbeitsspeicher."""
