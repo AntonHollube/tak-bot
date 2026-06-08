@@ -17,8 +17,8 @@ HELPER_DIR = os.path.dirname(os.path.abspath(__file__))
 BASE_DIR = os.path.dirname(HELPER_DIR)
 CERT_DIR = os.path.join(BASE_DIR, "certs")
 
-CLIENT_CERT = os.path.join(CERT_DIR, "admin_chain.pem")
-CLIENT_KEY = os.path.join(CERT_DIR, "admin_unencrypted.key") 
+CLIENT_CERT = os.path.join(CERT_DIR, "bot.pem")
+CLIENT_KEY = os.path.join(CERT_DIR, "bot.key") 
 
 TAK_CERTS = (CLIENT_CERT, CLIENT_KEY)
 
