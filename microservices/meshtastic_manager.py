@@ -193,8 +193,8 @@ def on_receive(packet, interface):
 def start_mesh_gateway():
     """Initialisiert das dedizierte Meshtastic-Edge-Gateway."""
     # Linux:
-    # port = os.getenv("MESH_PORT", "/dev/ttyUSB0") 
-    port = "COM5" 
+    port = os.getenv("MESH_PORT", "/dev/ttyACM0") 
+    # port = "COM5" 
     logging.info(f"[*] Starte autarkes Meshtastic-Gateway an {port}...")
     try:
         interface = meshtastic.serial_interface.SerialInterface(port)
