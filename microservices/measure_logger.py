@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+
 """
 measure_logger.py — Passiver Mitschnitt von Meshtastic-Empfangsdaten fuer Feldtests.
 
