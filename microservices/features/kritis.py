@@ -26,7 +26,7 @@ def execute_tunnel(lat, lon, args):
             'color': "-8355712", # Dunkelgrau markieren
             'status': "Tunnel", 'dist': entry["dist"],
             'remarks': f"Tunnel/Unterfuehrung | Beleuchtet: {lit} | Distanz: {entry['dist']}m",
-            'type': SYMBOLOGY.get("kritis_tunnel", "a-u-U-I") # MIL-STD Underground
+            'type': SYMBOLOGY.get("kritis_tunnel", "a-u-G-I-c-t") # MIL-STD Underground
         })
 
     if not results: 
@@ -94,7 +94,7 @@ def execute_hospital(lat, lon, args):
             'color': "-16776961", # Blau (wird ueberschrieben)
             'status': "Krankenhaus", 'dist': entry["dist"],
             'remarks': f"Medizinische Einrichtung | Notaufnahme-Status: {emergency}",
-            'type': 'a-f-G-M-F' # MIL-STD Medical Facility
+            'type': 'a-n-G-I-M' # MIL-STD Medical Facility
         })
 
     if not results: 

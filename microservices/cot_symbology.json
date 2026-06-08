@@ -1,10 +1,10 @@
 {
   "MIL_STD_2525": {
-    "pegel": "a-f-G",
-    "bridge": "a-u-G",
+    "pegel": "a-u-G", 
+    "bridge": "a-u-G-I-B", 
     "weather": "b-m-p-w",
-    "airplane": "a-f-A-C",
-    "kritis_hospital": "a-u-G",
-    "kritis_tunnel": "a-u-G"
+    "airplane": "a-u-A-C", 
+    "kritis_hospital": "a-n-G-I-M",
+    "kritis_tunnel": "a-u-G-I-c-t"
   }
 }
