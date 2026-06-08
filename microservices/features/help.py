@@ -10,7 +10,7 @@ def execute(lat, lon, args):
         " !hosp [1-3]-> Kliniken\n"
         " !p [1-3]   -> Aktuelle Flusspegel \n"
         " !w [1-3]   -> Wetter- & Wind-Lagebild \n"
-        " !wifi [1-3]-> Notfall-WLAN-Hotspots \n"
+        " !i [1-3]   -> Notfall-WLAN-Hotspots \n"
         " !a         -> Live-Flugzeug-Tracking umschalten\n"
         "Beispiel: '!t 2' sucht Tunnel im mittleren Umkreis."
     )

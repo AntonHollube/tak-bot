@@ -99,9 +99,9 @@ def route_command(cmd_string, lat, lon, target_uid):
         # Marker aus den Modul-Daten aufbauen
         for m in marker_data:
             fallback_remarks = f"Status: {m.get('status', 'N/A')} | Distanz: {m.get('dist', '0')}m"
-            
+            safe_uid = f"bot-mark-{m['lat']}-{m['lon']}"
             xml = build_cot_event(
-                uid=f"bot-mark-{m['name']}-{m['lat']}",
+                uid=safe_uid,
                 cot_type=m.get('type', 'a-u-G'),
                 lat=m['lat'],
                 lon=m['lon'],

@@ -149,8 +149,8 @@ def on_receive(packet, interface):
     cmd = text.lower()
 
     # Kommando-Routing (Prefix-sicher)
-    if cmd.startswith('!w'):
-        logging.info("[*] LoRa RX: '!w'. Lade Wetter...")
+    if cmd.startswith('?w'):
+        logging.info("[*] LoRa RX: '?w'. Lade Wetter...")
         weather_data = fetch_weather(lat, lon)
         if weather_data:
             temp = weather_data.get("current_weather", {}).get("temperature", "N/A")
@@ -159,20 +159,20 @@ def on_receive(packet, interface):
         else:
             reply_msg = "Wetter-API offline."
 
-    elif cmd.startswith('!p'):
-        logging.info("[*] LoRa RX: '!p'. Suche Pegel...")
+    elif cmd.startswith('?p'):
+        logging.info("[*] LoRa RX: '?p'. Suche Pegel...")
         reply_msg = get_closest_poi(lat, lon, "pegel.json", "Pegel")
         
-    elif cmd.startswith('!k'):
-        logging.info("[*] LoRa RX: '!k'. Suche Klinik...")
+    elif cmd.startswith('?k'):
+        logging.info("[*] LoRa RX: '?k'. Suche Klinik...")
         reply_msg = get_closest_poi(lat, lon, "hospitals.json", "Klinik")
         
-    elif cmd.startswith('!h'):
-        logging.info("[*] LoRa RX: '!h'. Suche Hotspot...")
+    elif cmd.startswith('?i'):
+        logging.info("[*] LoRa RX: '?i'. Suche Hotspot...")
         reply_msg = get_closest_poi(lat, lon, "wifi.json", "WLAN")
 
-    elif cmd.startswith('!o'):
-        logging.info("[*] LoRa RX: '!o'. Sende Position...")
+    elif cmd.startswith('?o'):
+        logging.info("[*] LoRa RX: '?o'. Sende Position...")
         p_lat = position.get('latitude')
         p_lon = position.get('longitude')
         alt   = position.get('altitude')
@@ -199,7 +199,7 @@ def start_mesh_gateway():
     try:
         interface = meshtastic.serial_interface.SerialInterface(port)
         pub.subscribe(on_receive, "meshtastic.receive")
-        logging.info("[+] Service aktiv. Lausche auf !w, !p, !k, !h.")
+        logging.info("[+] Service aktiv. Lausche auf ?w, ?p, ?k, ?h.")
         
         while True:
             time.sleep(1) # Thread am Leben halten
