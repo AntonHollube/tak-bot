@@ -1,54 +1,56 @@
+import logging
 import requests
-import urllib3
 
-# SSL-Warnungen unterdrücken
-urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def fetch_overpass(query, user_agent="TAK-Microservice/1.0"):
-    """Führt eine Suchabfrage gegen die OpenStreetMap Overpass API aus."""
-    url = "http://overpass-api.de/api/interpreter"
-    headers = {"User-Agent": user_agent} # Header setzen
+    """Suchabfrage gegen die OpenStreetMap Overpass API."""
+    url = "https://overpass-api.de/api/interpreter"
     try:
-        response = requests.post(url, data={"data": query}, headers=headers, timeout=25)
-        response.raise_for_status() # HTTP-Fehler abfangen
+        response = requests.post(url, data={"data": query},
+                                 headers={"User-Agent": user_agent}, timeout=25)
+        response.raise_for_status()
         return response.json().get("elements", [])
     except Exception as e:
-        print(f"[-] Overpass API Fehler: {e}")
+        logging.error(f"[-] Overpass API Fehler: {e}")
         return []
+
 
 def fetch_opensky(bbox):
-    """Holt Live-Flugdaten für einen definierten geografischen Bereich."""
+    """Live-Flugdaten fuer einen geografischen Bereich (lamin,lamax,lomin,lomax)."""
     lamin, lamax, lomin, lomax = bbox
-    url = f"https://opensky-network.org/api/states/all?lamin={lamin}&lomin={lomin}&lamax={lamax}&lomax={lomax}"
+    url = (f"https://opensky-network.org/api/states/all?"
+           f"lamin={lamin}&lomin={lomin}&lamax={lamax}&lomax={lomax}")
     try:
-        headers = {'User-Agent': 'TAK-Bot/1.0'}
-        response = requests.get(url, headers=headers, timeout=10)
+        response = requests.get(url, headers={'User-Agent': 'TAK-Bot/1.0'}, timeout=10)
         response.raise_for_status()
-        return response.json().get("states", []) # Flugdaten extrahieren
+        return response.json().get("states", [])
     except Exception as e:
-        print(f"[-] OpenSky API Fehler: {e}")
+        logging.error(f"[-] OpenSky API Fehler: {e}")
         return []
 
+
 def fetch_weather(lat, lon):
-    """Ruft das aktuelle Wetter sowie eine stündliche Vorhersage ab."""
-    url = f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}&current_weather=true&hourly=temperature_2m,precipitation_probability&forecast_days=2"
+    """Aktuelles Wetter + stuendliche Vorhersage von Open-Meteo."""
+    url = (f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}"
+           f"&current_weather=true&hourly=temperature_2m,precipitation_probability"
+           f"&forecast_days=2")
     try:
-        headers = {'User-Agent': 'TAK-Bot/1.0'}
-        response = requests.get(url, headers=headers, timeout=5, verify=False)
+        response = requests.get(url, headers={'User-Agent': 'TAK-Bot/1.0'}, timeout=5)
         response.raise_for_status()
         return response.json()
     except Exception as e:
-        print(f"[-] Open-Meteo Fehler bei {lat},{lon}: {e}")
+        logging.error(f"[-] Open-Meteo Fehler bei {lat},{lon}: {e}")
         return None
 
+
 def fetch_pegel():
-    """Lädt alle aktuellen Pegelstände der PegelOnline API herunter."""
-    url = "https://pegelonline.wsv.de/webservices/rest-api/v2/stations.json?includeTimeseries=true&includeCurrentMeasurement=true"
+    """Alle aktuellen Pegelstaende der PegelOnline API."""
+    url = ("https://pegelonline.wsv.de/webservices/rest-api/v2/stations.json"
+           "?includeTimeseries=true&includeCurrentMeasurement=true")
     try:
-        headers = {'User-Agent': 'TAK-Bot/1.0'}
-        response = requests.get(url, headers=headers, timeout=15, verify=False)
+        response = requests.get(url, headers={'User-Agent': 'TAK-Bot/1.0'}, timeout=15)
         response.raise_for_status()
-        return response.json() # JSON zurückgeben
+        return response.json()
     except Exception as e:
-        print(f"[-] PegelOnline API Fehler: {e}")
+        logging.error(f"[-] PegelOnline API Fehler: {e}")
         return []

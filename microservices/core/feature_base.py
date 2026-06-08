@@ -23,13 +23,17 @@ def load_json_data(filename):
 
 
 def extract_coordinates(poi):
-    """Extrahiert (lat, lon) aus heterogenen JSON-Schemata (OSM-center / flach)."""
-    center = poi.get("center")
-    if isinstance(center, dict):
-        return center.get("lat"), center.get("lon")
-    # dict.get(key, default) liefert auch den Wert 0.0 korrekt zurueck.
-    lat = poi.get("latitude", poi.get("lat"))
-    lon = poi.get("longitude", poi.get("lon"))
+    # 1. Fall: OSM Node (WLAN, Hotels, einfache Punkte)
+    lat = poi.get("lat")
+    lon = poi.get("lon")
+    
+    # 2. Fall: OSM Way / Polygon (Brücken, Tunnel, Flächen)
+    # Wenn auf Ebene 1 nichts gefunden wurde, im "center"-Block suchen!
+    if lat is None or lon is None:
+        center = poi.get("center", {})
+        lat = center.get("lat")
+        lon = center.get("lon")
+        
     return lat, lon
 
 
@@ -38,6 +42,9 @@ def filter_pois_in_radius(filename, user_lat, user_lon, level):
     raw_data = load_json_data(filename)
     if not raw_data:
         return []
+    if isinstance(raw_data, dict) and "elements" in raw_data:
+        raw_data = raw_data["elements"]
+
 
     valid_hexagons = get_search_area(user_lat, user_lon, level)  # Stufe 1: O(1)-Set
     filtered_pois = []
