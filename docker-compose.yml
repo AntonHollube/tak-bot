@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile.takserver-db
     container_name: tak_postgres
+    restart: always
     ports:
       - "127.0.0.1:5432:5432"
     environment:
@@ -19,6 +20,7 @@ services:
       context: .
       dockerfile: Dockerfile.takserver
     container_name: tak_core
+    restart: always
     depends_on:
       - tak-db
     ports:
@@ -34,6 +36,7 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: tak_grafana
+    restart: always
     ports:
       - "3000:3000"
     volumes:
@@ -48,7 +51,7 @@ services:
     container_name: tak_bot
     depends_on:
       - tak-server
-    restart: unless-stopped
+    restart: always
     command: ["sh", "-c", "sleep 60 && python manager.py"]
     environment:
       - TAK_HOST=tak-server
@@ -65,7 +68,7 @@ services:
     container_name: tak_worker
     depends_on:
       - tak-server
-    restart: unless-stopped
+    restart: always
     command: ["python", "task_worker.py"]
     environment:
       - TAK_HOST=tak-server
@@ -82,7 +85,7 @@ services:
     container_name: tak_mesh_gateway
     depends_on:
       - tak-server
-    restart: unless-stopped
+    restart: always
     command: ["python", "meshtastic_manager.py"] 
     environment:
       - MESH_PORT=/dev/ttyACM0
