@@ -6,6 +6,7 @@ from core.api_connector import fetch_overpass
 
 # Layer-Definition für kritische Infrastruktur (KRITIS)
 KRITIS_LAYERS = {
+    # bridges wird auch von bridge_scanner.py geladen -> doppelter Fetch (bekannt, vgl. Thesis 9.2)
     "bridges": {
         "filename": "bridges.json",
         "query": '[out:json][timeout:25];area["name"="Passau"]->.searchArea;(way["bridge"="yes"]["highway"](area.searchArea););out center;'
@@ -25,11 +26,7 @@ KRITIS_LAYERS = {
 }
 
 def update_kritis_cache():
-    """
-    Implementiert ein Cache-Aside-Pattern für kritische Geodaten.
-    Lädt zyklisch Infrastrukturdaten aus OSM herunter und speichert 
-    diese atomar, um Ausfallsicherheit im autarken Betrieb zu gewährleisten.
-    """
+    """Laedt alle KRITIS-Layer (Tunnel/WLAN/Kliniken/Bruecken) via Overpass, atomar nach data/."""
     logging.info("[*] Aktualisiere KRITIS-Layer...")
 
     data_dir = "data"

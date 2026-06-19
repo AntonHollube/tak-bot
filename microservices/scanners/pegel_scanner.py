@@ -5,10 +5,7 @@ import logging
 from core.api_connector import fetch_pegel
 
 def update_pegel_cache():
-    """
-    Ruft Echtzeit-Wasserstände der PegelOnline-API ab und 
-    persistiert diese lokal für die Offline-Verarbeitung.
-    """
+    """Laedt aktuelle Pegelstaende und schreibt sie atomar in data/pegel.json."""
     logging.info("[*] Lade Pegelstände (PegelOnline)...")
     stations = fetch_pegel() # API-Call ausführen
     
