@@ -40,11 +40,17 @@ def execute(lat, lon, args):
 
     entries = filter_pois_in_radius("bridges.json", lat, lon, level)
     markers = []
+    seen_names = set()  # OSM fuehrt eine Bruecke oft als mehrere Wege -> je Name nur einmal
 
-    for entry in entries:
+    for entry in entries:  # nach Distanz sortiert: die erste (naechste) Instanz gewinnt
         poi = entry["raw_data"]
         tags = poi.get("tags", {})
         name = tags.get("name", "Unbekannte Bruecke")
+        # benannte Dubletten ueberspringen; unbenannte Bruecken sind echte Einzelobjekte -> behalten
+        if name != "Unbekannte Bruecke":
+            if name in seen_names:
+                continue
+            seen_names.add(name)
         maxweight = tags.get("maxweight", "Unbekannt")
         color, status = _classify_maxweight(maxweight)
 
