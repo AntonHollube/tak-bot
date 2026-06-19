@@ -31,3 +31,6 @@ grafana_data/
 .idea/
 .DS_Store
 Thumbs.db
+
+# Laufzeit: vom image_scanner geholte Bruecken-Bilder (kein Repo-Inhalt)
+microservices/data/bridge_images/
