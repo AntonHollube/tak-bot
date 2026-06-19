@@ -1,3 +1,4 @@
+"""Off-Grid-Gateway: empfaengt LoRa-Textbefehle (?w/?p/?k/?i/?o) und antwortet kompakt ueber Meshtastic."""
 import sys
 import time
 import json

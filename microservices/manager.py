@@ -158,15 +158,14 @@ def start_manager():
             ssock.settimeout(None)
             logging.info("[+] Erfolgreich verbunden.")
 
-            # --- NEU: Initialer Ping, damit der TAK-Server uns nicht kickt ---
+            # Initialer Ping (t-x-c-t), damit der TAK-Server die Verbindung nicht sofort kickt.
             now = datetime.now(timezone.utc)
             now_str = now.strftime("%Y-%m-%dT%H:%M:%S.000Z")
             stale_str = (now + timedelta(minutes=10)).strftime("%Y-%m-%dT%H:%M:%S.000Z")
             ping_xml = f"""<?xml version="1.0" encoding="UTF-8"?><event version="2.0" uid="TAK-Bot-Connect-{uuid.uuid4()}" type="t-x-c-t" time="{now_str}" start="{now_str}" stale="{stale_str}" how="m-g"><point lat="0.0" lon="0.0" hae="0.0" ce="9999999" le="9999999"/><detail/></event>"""
             ssock.sendall(ping_xml.encode('utf-8'))
             logging.info("[+] Initialer XML-Ping gesendet.")
-            # -----------------------------------------------------------------
-            
+
             reader = threading.Thread(target=network_reader_thread,
                                       args=(ssock, stop_event), daemon=True)
             processor = threading.Thread(target=message_processor_thread,

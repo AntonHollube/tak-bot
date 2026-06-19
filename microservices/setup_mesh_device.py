@@ -1,9 +1,11 @@
+"""Einmalige Provisionierung eines Meshtastic-Knotens (Region, Kanal, Preset) ueber die Meshtastic-CLI."""
 import subprocess
 import time
 
 PORT = "/dev/ttyACM0"
 REGION = "EU_868"
 CHANNEL_NAME = "TAK-Passau"
+# Lab-PSK, bewusst im Klartext (vgl. Thesis 9.2); fuer den echten Einsatz aus dem Quelltext auslagern.
 PSK = "base64:exIn1wKKMSNayVOCzzqbMGK9INh6OqUZ+JMHt/SklYk="
 
 def run_command(cmd, wait_time=3):
