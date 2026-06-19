@@ -27,11 +27,18 @@ import requests
 import urllib3
 
 from core.config import DATA_DIR
-from core.tak_network import BASE_URL, TAK_CERTS
+from core.tak_network import BASE_URL, TAK_CERTS, TAK_HOST
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 CACHE_FILE = os.path.join(DATA_DIR, "attachment_cache.json")
+
+# Der Upload laeuft INTERN ueber BASE_URL (z.B. tak-server:8443). Der Fileshare-Link im b-f-t-r-CoT
+# muss aber die Adresse tragen, unter der der ATAK-CLIENT den Server erreicht -- sonst kann ATAK den
+# Anhang nicht laden (bricht nach ~10 Versuchen ab). Per TAK_PUBLIC_HOST setzen (LAN-IP, ZeroTier-IP
+# oder Hostname); Default = TAK_HOST.
+PUBLIC_HOST = os.getenv("TAK_PUBLIC_HOST", TAK_HOST)
+PUBLIC_BASE_URL = f"https://{PUBLIC_HOST}:8443"
 
 
 def _ts(dt):
@@ -149,7 +156,7 @@ def build_fileshare_cot(server_hash, size, zip_name, display, lat, lon,
     """Baut die b-f-t-r-Fileshare-CoT (String). Wird vom manager über den Stream gesendet."""
     now = datetime.now(timezone.utc)
     tu = str(uuid.uuid4())
-    url = f"{BASE_URL}/Marti/sync/content?hash={server_hash}"
+    url = f"{PUBLIC_BASE_URL}/Marti/sync/content?hash={server_hash}"
     return (
         "<?xml version='1.0' encoding='UTF-8' standalone='yes'?>"
         f"<event version='2.0' uid='{tu}' type='b-f-t-r' how='h-e' "

@@ -55,6 +55,9 @@ services:
     command: ["sh", "-c", "sleep 60 && python manager.py"]
     environment:
       - TAK_HOST=tak-server
+      # Adresse, unter der ATAK den Server erreicht (fuer den Bild-Anhang-Download).
+      # LAN: 192.168.189.26  |  ZeroTier/Uni: 10.59.187.11  |  ggf. Hostname/oeffentliche IP.
+      - TAK_PUBLIC_HOST=192.168.189.26
       - PYTHONUNBUFFERED=1
     networks:
       - tak-network
