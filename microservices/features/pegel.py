@@ -1,5 +1,6 @@
-from core.feature_base import filter_pois_in_radius
-from core.config import SYMBOLOGY
+"""Pegel-Feature: Flusspegel im Umkreis abfragen und nach Meldestufe einfaerben."""
+from core.feature_base import filter_pois_in_radius, parse_level
+from core.config import SYMBOLOGY, COLOR_RED, COLOR_YELLOW, COLOR_BLUE
 
 def execute(lat, lon, args):
     """
@@ -7,21 +8,19 @@ def execute(lat, lon, args):
     der behördlichen Meldestufen (MHW/MNW). Generiert farbcodierte 
     Warnmarker für das taktische Lagebild.
     """
-    level = 1
-    if args and args[0].isdigit():
-        level = int(args[0]) # Radius anpassen
+    level = parse_level(args)
 
-    matched_entries = filter_pois_in_radius("pegel.json", lat, lon, level)
-    found_pegel = []
+    entries = filter_pois_in_radius("pegel.json", lat, lon, level)
+    markers = []
 
-    for entry in matched_entries:
+    for entry in entries:
         p = entry["raw_data"]
         name = p.get("shortname", "Unbekannt")
         water = p.get("water", {}).get("shortname", "Unbekanntes Gewaesser")
         
         wert = "N/A"
         warn_status = "Normal"
-        color = "-16776961" # Standard: Blau
+        color = COLOR_BLUE # Standard
         
         # Zeitreihen nach Wasserstand durchsuchen
         for ts in p.get("timeseries", []):
@@ -34,10 +33,10 @@ def execute(lat, lon, args):
                 
                 if state == "high":
                     warn_status = "HOCHWASSER (MHW ueberschritten)"
-                    color = "-65536" # Rot: Gefahr
+                    color = COLOR_RED
                 elif state == "low":
                     warn_status = "Niedrigwasser"
-                    color = "-256"   # Gelb: Warnung
+                    color = COLOR_YELLOW
                     
                 break # Nur aktuellsten Wert nutzen
                 
@@ -47,7 +46,7 @@ def execute(lat, lon, args):
         remarks = f"Gewaesser: {water} | Pegel: {wert} cm | Status: {warn_status}"
         
         # Marker aufbauen
-        found_pegel.append({
+        markers.append({
             'name': f"Pegel {name}", 
             'lat': entry["lat"], 
             'lon': entry["lon"],
@@ -58,8 +57,8 @@ def execute(lat, lon, args):
             'type': SYMBOLOGY.get("pegel", "b-m-p-s-m") # Punktmarker
         })
 
-    if not found_pegel:
+    if not markers:
         return f"Keine Pegelstationen im Radius Stufe {level} gefunden.", []
-        
-    chat_msg = f"{len(found_pegel)} Pegelstationen im Umkreis (Stufe {level}) abgefragt."
-    return chat_msg, found_pegel
+
+    chat_msg = f"{len(markers)} Pegelstationen im Umkreis (Stufe {level}) abgefragt."
+    return chat_msg, markers

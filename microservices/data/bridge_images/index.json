@@ -1,0 +1,23 @@
+{
+  "marienbruecke": {
+    "name": "Marienbrücke",
+    "source": "osm-image-tag",
+    "url": "https://commons.wikimedia.org/wiki/File:Passau_Marienbruecke_SUP.JPG",
+    "license": "frei lizenziert (Attribution: siehe Quelle)",
+    "fetched_at": "2026-06-19T08:11:00.546651+00:00"
+  },
+  "franz-josef-strauss-bruecke": {
+    "name": "Franz-Josef-Strauß-Brücke",
+    "source": "wikidata-P18",
+    "url": "https://www.wikidata.org/wiki/Q19279776",
+    "license": "frei lizenziert (Attribution: siehe Quelle)",
+    "fetched_at": "2026-06-19T08:11:07.264256+00:00"
+  },
+  "prinzregent-luitpold-bruecke": {
+    "name": "Prinzregent-Luitpold-Brücke",
+    "source": "wikipedia-summary",
+    "url": "https://de.wikipedia.org/wiki/Luitpoldbr%C3%BCcke%20%28Passau%29",
+    "license": "frei lizenziert (Attribution: siehe Quelle)",
+    "fetched_at": "2026-06-19T08:11:10.852259+00:00"
+  }
+}

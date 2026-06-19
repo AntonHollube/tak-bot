@@ -1,25 +1,33 @@
-# Environment variables
+# Secrets & Umgebung – niemals committen
 .env
-
-# Certs
-certs/*.key
-certs/*.pem
-certs/*.p12
+*.key
+*.pem
 *.p12
 
-# Logs
-*.log
-
-# Python Cache und Virtuelle Umgebungen
+# Python-Artefakte
 __pycache__/
 *.pyc
 venv/
 .venv/
 
-# temporäre Dateien
-data/*.json
+# Logs
+*.log
+logs/
 
-# TAK Core config und Zertifikate
+# Von den Scannern erzeugte Daten-Caches & Laufzeit-State
+**/data/*.json
+temp/
+
+# Zertifikate (liegen in microservices/certs)
+certs/
+
+# TAK-Server-Daten & Docker-Volumes
 /tak/
 tak-db-data/
 grafana_data/
+
+# Editor / Betriebssystem
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

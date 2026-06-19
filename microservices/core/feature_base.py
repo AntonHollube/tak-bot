@@ -1,11 +1,51 @@
+"""
+Gemeinsame Basis fuer alle Feature-Module (Bruecken, Pegel, Wetter, KRITIS ...).
+
+Marker-Vertrag
+--------------
+Ein Feature liefert (chat_text, marker_liste) zurueck. Jeder Marker ist ein dict,
+das der bot_router an build_cot_event() weiterreicht. Erwartete Schluessel:
+
+    name    (str)   Pflicht  - Anzeigename / Callsign-Basis des Markers
+    lat     (float) Pflicht  - Breitengrad
+    lon     (float) Pflicht  - Laengengrad
+    type    (str)   optional - CoT-Typ (Default 'a-u-G'), via SYMBOLOGY
+    color   (str)   optional - ARGB-Farbe (Default COLOR_BLUE), siehe config.COLOR_*
+    remarks (str)   optional - Freitext fuer die ATAK-Detailansicht
+    status  (str)   optional - Kurzstatus, nur fuer den remarks-Fallback im Router
+    dist    (int)   optional - Distanz in Metern, nur fuer den remarks-Fallback
+    course  (float) optional - Kurs in Grad (nur dynamische Objekte: Flug, Wind)
+    speed   (float) optional - Geschwindigkeit in m/s (nur dynamische Objekte)
+"""
+
 import json
 import logging
 import os
+import re
 import h3
 from core.h3_engine import get_search_area, H3_RESOLUTION
 from core.geo_math import calculate_distance
+from core.config import DATA_DIR
 
-DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data')
+_UMLAUTS = {"ä": "ae", "ö": "oe", "ü": "ue", "ß": "ss"}
+
+
+def slugify(name):
+    """Objektname -> dateisystemfreundlicher Slug (Umlaute aufgeloest, klein, Bindestriche).
+
+    Eine Quelle der Wahrheit fuer Feature (liest <slug>.jpg) und Scanner (schreibt <slug>.jpg).
+    """
+    s = name.lower()
+    for a, b in _UMLAUTS.items():
+        s = s.replace(a, b)
+    return re.sub(r"[^a-z0-9]+", "-", s).strip("-")
+
+
+def parse_level(args, default=1):
+    """Liest die optionale Radius-Stufe (1-3) aus den Befehls-Argumenten."""
+    if args and args[0].isdigit():
+        return int(args[0])
+    return default
 
 
 def load_json_data(filename):

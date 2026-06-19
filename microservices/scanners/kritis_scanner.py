@@ -1,5 +1,7 @@
+"""Scanner: laedt KRITIS-Layer (Tunnel, WLAN, Kliniken) via Overpass in den lokalen Cache."""
 import json
 import os
+import logging
 from core.api_connector import fetch_overpass
 
 # Layer-Definition für kritische Infrastruktur (KRITIS)
@@ -28,13 +30,13 @@ def update_kritis_cache():
     Lädt zyklisch Infrastrukturdaten aus OSM herunter und speichert 
     diese atomar, um Ausfallsicherheit im autarken Betrieb zu gewährleisten.
     """
-    print("[*] Aktualisiere KRITIS-Layer...")
-    
+    logging.info("[*] Aktualisiere KRITIS-Layer...")
+
     data_dir = "data"
     os.makedirs(data_dir, exist_ok=True) # Verzeichnis sicherstellen
 
     for layer_name, config in KRITIS_LAYERS.items():
-        print(f"[*] Verarbeite Layer: {layer_name}")
+        logging.info(f"[*] Verarbeite Layer: {layer_name}")
         elements = fetch_overpass(config["query"]) # Daten abrufen
         
         if elements:
@@ -48,11 +50,11 @@ def update_kritis_cache():
                 
                 # Thread-safe ersetzen
                 os.replace(temp_path, final_path)
-                print(f"[+] Layer {layer_name}: {len(elements)} Objekte gesichert.")
+                logging.info(f"[+] Layer {layer_name}: {len(elements)} Objekte gesichert.")
             except Exception as e:
-                print(f"[-] Speicherfehler bei {layer_name}: {e}")
+                logging.error(f"[-] Speicherfehler bei {layer_name}: {e}")
         else:
-            print(f"[-] Layer {layer_name} übersprungen (keine Daten).")
+            logging.warning(f"[-] Layer {layer_name} übersprungen (keine Daten).")
 
 if __name__ == "__main__":
     update_kritis_cache()

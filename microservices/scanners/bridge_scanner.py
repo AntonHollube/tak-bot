@@ -1,5 +1,7 @@
+"""Scanner: laedt Bruecken-Daten via Overpass und schreibt sie atomar in den lokalen Cache."""
 import json
 import os
+import logging
 from core.api_connector import fetch_overpass
 
 def update_bridge_cache():
@@ -8,7 +10,7 @@ def update_bridge_cache():
     über die OpenStreetMap Overpass-API. Verwendet atomares Speichern
     zur Vermeidung von Dateikorruption während Schreibvorgängen.
     """
-    print("[*] Lade Brückendaten (Overpass)...")
+    logging.info("[*] Lade Brückendaten (Overpass)...")
     
     # Abfrage für das Einsatzgebiet
     query = """
@@ -30,12 +32,12 @@ def update_bridge_cache():
             
             # Atomar überschreiben
             os.replace(temp_path, final_path)
-            print(f"[+] {len(bridges)} Brücken erfolgreich gesichert.")
-            
+            logging.info(f"[+] {len(bridges)} Brücken erfolgreich gesichert.")
+
         except Exception as e:
-            print(f"[-] I/O-Fehler bei Brückendaten: {e}")
+            logging.error(f"[-] I/O-Fehler bei Brückendaten: {e}")
     else:
-        print("[-] Keine API-Antwort erhalten.")
+        logging.warning("[-] Keine API-Antwort erhalten.")
 
 if __name__ == "__main__":
     update_bridge_cache()

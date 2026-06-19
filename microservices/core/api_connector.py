@@ -1,3 +1,4 @@
+"""Anbindung externer Datenquellen: OSM Overpass, OpenSky, Open-Meteo, PegelOnline."""
 import logging
 import requests
 
@@ -15,25 +16,10 @@ def fetch_overpass(query, user_agent="TAK-Microservice/1.0"):
         return []
 
 
-def fetch_opensky(bbox):
-    """Live-Flugdaten fuer einen geografischen Bereich (lamin,lamax,lomin,lomax)."""
-    lamin, lamax, lomin, lomax = bbox
-    url = (f"https://opensky-network.org/api/states/all?"
-           f"lamin={lamin}&lomin={lomin}&lamax={lamax}&lomax={lomax}")
-    try:
-        response = requests.get(url, headers={'User-Agent': 'TAK-Bot/1.0'}, timeout=10)
-        response.raise_for_status()
-        return response.json().get("states", [])
-    except Exception as e:
-        logging.error(f"[-] OpenSky API Fehler: {e}")
-        return []
-
-
 def fetch_weather(lat, lon):
-    """Aktuelles Wetter + stuendliche Vorhersage von Open-Meteo."""
+    """Aktuelles Wetter von Open-Meteo."""
     url = (f"https://api.open-meteo.com/v1/forecast?latitude={lat}&longitude={lon}"
-           f"&current_weather=true&hourly=temperature_2m,precipitation_probability"
-           f"&forecast_days=2")
+           f"&current_weather=true")
     try:
         response = requests.get(url, headers={'User-Agent': 'TAK-Bot/1.0'}, timeout=5)
         response.raise_for_status()

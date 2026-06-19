@@ -1,3 +1,4 @@
+"""Bot-Manager: haelt die mTLS-Stream-Verbindung zum TAK-Server und verarbeitet eingehende Chat-CoT."""
 import os
 import sys
 import time

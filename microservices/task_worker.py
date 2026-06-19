@@ -1,18 +1,16 @@
+"""Hintergrund-Worker: aktualisiert zyklisch die JSON-Daten-Caches (KRITIS, Bruecken, Pegel)."""
 import logging
 import sys
 import time
 import os
-import json
-from core.api_connector import fetch_weather
 from manager import ROOT_DIR
 from scanners.kritis_scanner import update_kritis_cache
 from scanners.pegel_scanner import update_pegel_cache
-from features.airplanes import push_live_traffic
+from scanners.bridge_scanner import update_bridge_cache
+from scanners.image_scanner import update_bridge_images
 from dotenv import load_dotenv
 
 load_dotenv() # .env-Datei laden
-
-DATA_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data")
 
 logging.basicConfig(
     level=logging.INFO, 
@@ -32,8 +30,10 @@ def run_scheduler():
     minutes_passed = 0
     
     # Initiale Befüllung der JSON-Dumps
-    logging.info("[*] Initiale Daten-Aktualisierung (KRITIS & Pegel)...")
+    logging.info("[*] Initiale Daten-Aktualisierung (KRITIS, Brücken & Pegel)...")
     update_kritis_cache()
+    update_bridge_cache()
+    update_bridge_images()  # FA7: Brücken-Bilder (Wikimedia) nach dem Brücken-Cache
     update_pegel_cache()
     
     while True:
@@ -43,21 +43,12 @@ def run_scheduler():
                 logging.info(f"[*] Führe 15-Minuten-Jobs aus (Minute {minutes_passed})")
                 update_pegel_cache() # Pegelstände updaten
 
-                # Flugzeug-Tracking updaten (falls Modul aktiv)
-                state_file = os.path.join(DATA_DIR, "airplane_state.json")
-                if os.path.exists(state_file):
-                    try:
-                        with open(state_file, "r") as f:
-                            state = json.load(f)
-                            if state.get("active", False):
-                                push_live_traffic(state.get("lat"), state.get("lon"))
-                    except Exception as e:
-                        logging.error(f"[-] Fehler beim Flugzeug-Tracker: {e}")
-
             # Täglicher Intervall (1440 Minuten)
             if minutes_passed > 0 and minutes_passed % 1440 == 0:
                 logging.info(f"[*] Führe tägliche Jobs aus (Minute {minutes_passed})")
-                update_kritis_cache() # Overpass-Layer updaten
+                update_kritis_cache()  # Overpass-Layer updaten
+                update_bridge_cache()  # Brücken-Layer updaten
+                update_bridge_images()  # FA7: neue/fehlende Brücken-Bilder nachziehen
                 
             time.sleep(60) # Genau 1 Minute schlafen
             minutes_passed += 1

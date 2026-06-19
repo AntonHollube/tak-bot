@@ -1,103 +1,86 @@
-from core.feature_base import filter_pois_in_radius
-from core.config import SYMBOLOGY
+"""KRITIS-Features: Tunnel, WLAN-Hotspots und Kliniken im Umkreis als Marker."""
+from core.feature_base import filter_pois_in_radius, parse_level
+from core.config import SYMBOLOGY, COLOR_BLUE, COLOR_GRAY, COLOR_MAGENTA
 
 def execute_tunnel(lat, lon, args):
-    """
-    Identifiziert und filtert Tunnelbauwerke im Einsatzgebiet zur Gefahrenprävention 
-    bei potenziellen Sturzfluten. Verwendet ein graues Farbschema und spezifische 
-    CoT-Infrastruktur-Typen zur visuellen Abgrenzung von oberirdischen Straßen.
-    """
-    level = 1
-    if args and args[0].isdigit():
-        level = int(args[0]) # Radius anpassen
+    """Markiert Tunnel/Unterfuehrungen im Umkreis (relevant bei Sturzfluten)."""
+    level = parse_level(args)
 
-    matched = filter_pois_in_radius("tunnels.json", lat, lon, level)
-    results = []
+    entries = filter_pois_in_radius("tunnels.json", lat, lon, level)
+    markers = []
 
-    for entry in matched:
+    for entry in entries:
         poi = entry["raw_data"]
         tags = poi.get("tags", {})
-        
+
         name = tags.get("name", "Unterfuehrung/Tunnel")
         lit = tags.get("lit", "Unbekannt")
-        
-        results.append({
+
+        markers.append({
             'name': name, 'lat': entry["lat"], 'lon': entry["lon"],
-            'color': "-8355712", # Dunkelgrau markieren
+            'color': COLOR_GRAY,
             'status': "Tunnel", 'dist': entry["dist"],
             'remarks': f"Tunnel/Unterfuehrung | Beleuchtet: {lit} | Distanz: {entry['dist']}m",
-            'type': SYMBOLOGY.get("kritis_tunnel", "a-u-U") # MIL-STD Underground
+            'type': SYMBOLOGY.get("kritis_tunnel", "a-u-G")
         })
 
-    if not results: 
+    if not markers:
         return f"Keine Tunnel/Unterfuehrungen im Radius Stufe {level} gefunden.", []
-        
-    return f"{len(results)} Tunnel/Unterfuehrungen im Umkreis markiert.", results
+
+    return f"{len(markers)} Tunnel/Unterfuehrungen im Umkreis markiert.", markers
 
 
 def execute_wifi(lat, lon, args):
-    """
-    Lokaliert öffentliche WLAN-Hotspots als Kommunikations-Fallback 
-    bei Ausfällen ziviler Mobilfunknetze (Off-Grid-Szenarien).
-    Markiert diese taktisch als unbekannte Bodenobjekte in Magenta.
-    """
-    level = 1
-    if args and args[0].isdigit():
-        level = int(args[0]) # Radius anpassen
+    """Markiert oeffentliche WLAN-Hotspots als Kommunikations-Fallback (Off-Grid)."""
+    level = parse_level(args)
 
-    matched = filter_pois_in_radius("wifi.json", lat, lon, level)
-    results = []
+    entries = filter_pois_in_radius("wifi.json", lat, lon, level)
+    markers = []
 
-    for entry in matched:
+    for entry in entries:
         poi = entry["raw_data"]
         tags = poi.get("tags", {})
-        
+
         name = tags.get("name", "Oeffentlicher WLAN Spot")
         operator = tags.get("operator", "Frei/Unbekannt")
-        
-        results.append({
+
+        markers.append({
             'name': name, 'lat': entry["lat"], 'lon': entry["lon"],
-            'color': "-65281", # Magenta für Funk
+            'color': COLOR_MAGENTA,
             'status': "WLAN-Hotspot", 'dist': entry["dist"],
             'remarks': f"Notfall-Konnektivitaet | Betreiber: {operator}",
-            'type': 'a-u-G' # Unbekanntes Bodenobjekt
+            'type': SYMBOLOGY.get("kritis_wifi", "a-u-G") # Unbekanntes Bodenobjekt
         })
 
-    if not results: 
+    if not markers:
         return f"Keine WLAN-Spots im Radius Stufe {level} gefunden.", []
-        
-    return f"{len(results)} Kommunikations-WLAN-Hotspots auf Karte uebertragen.", results
+
+    return f"{len(markers)} Kommunikations-WLAN-Hotspots auf Karte uebertragen.", markers
 
 
 def execute_hospital(lat, lon, args):
-    """
-    Extrahiert medizinische Einrichtungen zur Evakuierungs- und MANV-Planung.
-    Implementiert das dedizierte MIL-STD CoT-Symbol (Friend Ground Medical Facility), 
-    welches vom ATAK-Client nativ als Sanitätskreuz gerendert wird.
-    """
-    level = 1
-    if args and args[0].isdigit():
-        level = int(args[0]) # Radius anpassen
+    """Markiert Kliniken/med. Einrichtungen (MIL-STD-Symbol, als Sanitaetskreuz gerendert)."""
+    level = parse_level(args)
 
-    matched = filter_pois_in_radius("hospitals.json", lat, lon, level)
-    results = []
+    entries = filter_pois_in_radius("hospitals.json", lat, lon, level)
+    markers = []
 
-    for entry in matched:
+    for entry in entries:
         poi = entry["raw_data"]
         tags = poi.get("tags", {})
-        
+
         name = tags.get("name", "Krankenhaus / Med. Einrichtung")
         emergency = tags.get("emergency", "Unbekannt")
-        
-        results.append({
+
+        markers.append({
             'name': name, 'lat': entry["lat"], 'lon': entry["lon"],
-            'color': "-16776961", # Blau (wird ueberschrieben)
+            'color': COLOR_BLUE,
             'status': "Krankenhaus", 'dist': entry["dist"],
             'remarks': f"Medizinische Einrichtung | Notaufnahme-Status: {emergency}",
-            'type': 'a-n-G-I-M' # MIL-STD Medical Facility
+            'type': SYMBOLOGY.get("kritis_hospital", "a-n-G-I-M") # MIL-STD Medical Facility
         })
 
-    if not results: 
+    if not markers:
         return f"Keine Krankenhaeuser im Radius Stufe {level} gefunden.", []
-        
-    return f"{len(results)} medizinische KRITIS-Einrichtungen ins Lagebild eingespeist.", results
+
+    return f"{len(markers)} medizinische KRITIS-Einrichtungen ins Lagebild eingespeist.", markers

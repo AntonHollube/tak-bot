@@ -3,8 +3,8 @@
     "pegel": "a-f-G-U-C",
     "bridge": "a-u-G",
     "weather": "b-m-p-w",
-    "airplane": "a-f-A-C",
-    "kritis_hospital": "a-u-G",
-    "kritis_tunnel": "a-u-G"
+"kritis_hospital": "a-n-G-I-M",
+    "kritis_tunnel": "a-u-G",
+    "kritis_wifi": "a-u-G"
   }
 }

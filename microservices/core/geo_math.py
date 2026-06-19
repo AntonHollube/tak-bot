@@ -24,18 +24,3 @@ def calculate_bearing(lat1, lon1, lat2, lon2):
     
     # Winkel berechnen und normalisieren
     return (math.degrees(math.atan2(y, x)) + 360) % 360
-
-def generate_circle_points(lat, lon, radius_meters=50, num_points=36):
-    """Erzeugt Koordinaten für ein KML-Polygon in Form eines Kreises."""
-    coords = []
-    for i in range(num_points + 1):
-        angle = math.radians(float(i) / num_points * 360) # Winkel berechnen
-        dx = radius_meters * math.cos(angle)
-        dy = radius_meters * math.sin(angle)
-        
-        # In Koordinaten umrechnen
-        new_lat = lat + (dy / 111320)
-        new_lon = lon + (dx / (111320 * math.cos(math.radians(lat))))
-        coords.append(f"{new_lon},{new_lat},0") # Punkt hinzufügen
-        
-    return " ".join(coords) # String für XML bauen
