@@ -4,13 +4,9 @@ import os
 import logging
 from core.api_connector import fetch_overpass
 
-# Layer-Definition für kritische Infrastruktur (KRITIS)
+# Layer-Definition für kritische Infrastruktur (KRITIS).
+# Bruecken bewusst NICHT hier: die laedt allein bridge_scanner.py (sonst doppelter Fetch).
 KRITIS_LAYERS = {
-    # bridges wird auch von bridge_scanner.py geladen -> doppelter Fetch (bekannt, vgl. Thesis 9.2)
-    "bridges": {
-        "filename": "bridges.json",
-        "query": '[out:json][timeout:25];area["name"="Passau"]->.searchArea;(way["bridge"="yes"]["highway"](area.searchArea););out center;'
-    },
     "tunnels": {
         "filename": "tunnels.json",
         "query": '[out:json][timeout:25];area["name"="Passau"]->.searchArea;(way["tunnel"="yes"]["highway"](area.searchArea););out center;'
@@ -26,7 +22,7 @@ KRITIS_LAYERS = {
 }
 
 def update_kritis_cache():
-    """Laedt alle KRITIS-Layer (Tunnel/WLAN/Kliniken/Bruecken) via Overpass, atomar nach data/."""
+    """Laedt die KRITIS-Layer (Tunnel/WLAN/Kliniken) via Overpass, atomar nach data/."""
     logging.info("[*] Aktualisiere KRITIS-Layer...")
 
     data_dir = "data"
