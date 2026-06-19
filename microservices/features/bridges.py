@@ -2,7 +2,7 @@
 import os
 
 from core.feature_base import filter_pois_in_radius, parse_level, slugify
-from core.config import SYMBOLOGY, DATA_DIR, COLOR_RED, COLOR_YELLOW, COLOR_GREEN, COLOR_BLUE
+from core.config import SYMBOLOGY, DATA_DIR, COLOR_RED, COLOR_YELLOW, COLOR_GREEN, COLOR_BLUE, COLOR_MAGENTA
 
 # Lokale Bildablage je Brücke (FA7). Dateiname = slugify(Brückenname).<jpg|jpeg|png>.
 # Bewusst nur lokal: Features bleiben netzfrei (externe I/O macht der image_scanner, vgl. NFA5/Cache-Aside).
@@ -61,9 +61,12 @@ def execute(lat, lon, args):
             'type': SYMBOLOGY.get("bridge", "a-u-G")
         }
         # FA7: liegt ein Bild zur Brücke vor, wird es als Marker-Anhang mitgeschickt.
+        # Solche Brücken stechen pink heraus (sonst Ampel-/Standardfarbe) + Hinweis in den Remarks.
         image = _find_image(name)
         if image:
             marker['image'] = image
+            marker['color'] = COLOR_MAGENTA
+            marker['remarks'] += " | Foto-Anhang"
         markers.append(marker)
 
     if not markers:
