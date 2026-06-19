@@ -20,10 +20,7 @@ def get_wind_direction_abbr(degrees):
         return "N/A"
 
 def execute(lat, lon, args):
-    """
-    Ruft meteorologische Echtzeitdaten ab, parst stündliche Prognosen 
-    und generiert ein räumliches Wind-Grid über die H3-Hexagone des Einsatzgebietes.
-    """
+    """Ruft das aktuelle Wetter ab und legt daraus ein Wind-Grid ueber die H3-Zellen des Suchgebiets."""
     logging.info(f"[*] Initialisiere Wetter-Abfrage (Lat: {lat}, Lon: {lon})")
     level = parse_level(args)
 

@@ -3,11 +3,7 @@ from core.feature_base import filter_pois_in_radius, parse_level
 from core.config import SYMBOLOGY, COLOR_RED, COLOR_YELLOW, COLOR_BLUE
 
 def execute(lat, lon, args):
-    """
-    Fragt Wasserstandsdaten ab und klassifiziert diese dynamisch anhand 
-    der behördlichen Meldestufen (MHW/MNW). Generiert farbcodierte 
-    Warnmarker für das taktische Lagebild.
-    """
+    """Fragt Pegel im Umkreis ab und faerbt sie nach behoerdlicher Meldestufe (MHW/MNW) ein."""
     level = parse_level(args)
 
     entries = filter_pois_in_radius("pegel.json", lat, lon, level)
