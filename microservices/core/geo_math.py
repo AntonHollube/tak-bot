@@ -1,3 +1,4 @@
+"""Geodaetische Helfer: Distanz (Haversine) und Peilung zwischen zwei Koordinaten."""
 import math
 
 def calculate_distance(lat1, lon1, lat2, lon2):

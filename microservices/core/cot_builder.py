@@ -35,7 +35,7 @@ def build_cot_event(uid, cot_type, lat, lon, callsign, remarks="", color=COLOR_B
 
     detail = ET.SubElement(event, "detail")
 
-    # zuvor 'remarks.elem = ...' -> AttributeError auf str (crashte jeden Aufruf).
+    # remarks als eigenes Element anlegen und den Text setzen (nicht als Attribut).
     remarks_elem = ET.SubElement(detail, "remarks")
     remarks_elem.text = str(remarks)
 

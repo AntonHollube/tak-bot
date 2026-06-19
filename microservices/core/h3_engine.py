@@ -1,3 +1,4 @@
+"""H3-Geofencing: Suchgebiet als k-Ring von Hexagon-Zellen um die Nutzerposition."""
 import h3
 
 H3_RESOLUTION = 7
