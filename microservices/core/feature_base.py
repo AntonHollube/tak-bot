@@ -63,17 +63,21 @@ def load_json_data(filename):
 
 
 def extract_coordinates(poi):
-    # 1. Fall: OSM Node (WLAN, Hotels, einfache Punkte)
+    # 1. Fall: OSM Node (WLAN, Kliniken, einfache Punkte)
     lat = poi.get("lat")
     lon = poi.get("lon")
-    
-    # 2. Fall: OSM Way / Polygon (Brücken, Tunnel, Flächen)
-    # Wenn auf Ebene 1 nichts gefunden wurde, im "center"-Block suchen!
+
+    # 2. Fall: PegelOnline-Station nutzt latitude/longitude statt lat/lon.
+    if lat is None or lon is None:
+        lat = poi.get("latitude")
+        lon = poi.get("longitude")
+
+    # 3. Fall: OSM Way / Polygon (Brücken, Tunnel, Flächen) -> Koordinate im "center"-Block.
     if lat is None or lon is None:
         center = poi.get("center", {})
         lat = center.get("lat")
         lon = center.get("lon")
-        
+
     return lat, lon
 
 
