@@ -30,6 +30,7 @@ services:
       - "8444:8444"
     networks:
       - tak-network
+      - proxy-network
     volumes:
       - ./tak:/opt/tak
 
@@ -43,6 +44,7 @@ services:
       - grafana_data:/var/lib/grafana
     networks:
       - tak-network
+      - proxy-network
 
   tak-bot:
     build:
@@ -56,8 +58,8 @@ services:
     environment:
       - TAK_HOST=tak-server
       # Adresse, unter der ATAK den Server erreicht (fuer den Bild-Anhang-Download).
-      # LAN: 192.168.189.26  |  ZeroTier/Uni: 10.59.187.11  |  ggf. Hostname/oeffentliche IP.
-      - TAK_PUBLIC_HOST=192.168.189.26
+      # Hetzner (oeffentliche IP): 91.98.138.143
+      - TAK_PUBLIC_HOST=91.98.138.143
       - PYTHONUNBUFFERED=1
     networks:
       - tak-network
@@ -93,8 +95,10 @@ services:
     environment:
       - MESH_PORT=/dev/ttyACM0
       - PYTHONUNBUFFERED=1
-    devices:
-      - "/dev/ttyACM0:/dev/ttyACM0" 
+    # Kein Meshtastic-Geraet an diesem Host -> devices-Mapping deaktiviert,
+    # sonst schlaegt "docker compose up" fuer den ganzen Stack fehl.
+    # devices:
+    #   - "/dev/ttyACM0:/dev/ttyACM0"
     networks:
       - tak-network
     volumes:
@@ -103,6 +107,8 @@ services:
 networks:
   tak-network:
     driver: bridge
+  proxy-network:
+    external: true
 
 volumes:
   tak_db_data:
