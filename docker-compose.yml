@@ -94,6 +94,9 @@ services:
     command: ["python", "meshtastic_manager.py"] 
     environment:
       - MESH_PORT=/dev/ttyACM0
+      # Nur fuer setup_mesh_device.py (Provisionierung), Werte aus .env
+      - MESH_CHANNEL_NAME=${MESH_CHANNEL_NAME:-TAK-Erlangen}
+      - MESH_PSK=${MESH_PSK:-}
       - DEFAULT_LAT=${DEFAULT_LAT:-49.5897}
       - DEFAULT_LON=${DEFAULT_LON:-11.0039}
       - PYTHONUNBUFFERED=1
