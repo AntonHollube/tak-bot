@@ -58,8 +58,8 @@ services:
     environment:
       - TAK_HOST=tak-server
       # Adresse, unter der ATAK den Server erreicht (fuer den Bild-Anhang-Download).
-      # Hetzner (oeffentliche IP): 91.98.138.143
-      - TAK_PUBLIC_HOST=91.98.138.143
+      # Wird aus der .env neben dieser Datei gelesen (NUC: Tailscale-IP).
+      - TAK_PUBLIC_HOST=${TAK_PUBLIC_HOST:?TAK_PUBLIC_HOST in .env setzen}
       - PYTHONUNBUFFERED=1
     networks:
       - tak-network
@@ -94,6 +94,8 @@ services:
     command: ["python", "meshtastic_manager.py"] 
     environment:
       - MESH_PORT=/dev/ttyACM0
+      - DEFAULT_LAT=${DEFAULT_LAT:-49.5897}
+      - DEFAULT_LON=${DEFAULT_LON:-11.0039}
       - PYTHONUNBUFFERED=1
     # Kein Meshtastic-Geraet an diesem Host -> devices-Mapping deaktiviert,
     # sonst schlaegt "docker compose up" fuer den ganzen Stack fehl.

@@ -19,6 +19,9 @@ load_dotenv() # .env-Datei laden
 # Optionales Link-Logging (nur aktiv, wenn MESH_LOG_CSV gesetzt ist)
 MESH_LOG_CSV   = os.getenv("MESH_LOG_CSV")            # z.B. "mesh_measurements.csv"
 MESH_LOG_LABEL = os.getenv("MESH_LOG_LABEL", "")      # z.B. "LoS_500m"
+# Fallback-Position ohne GPS-Fix (Standard: Erlangen Zentrum)
+DEFAULT_LAT = float(os.getenv("DEFAULT_LAT", "49.5897"))
+DEFAULT_LON = float(os.getenv("DEFAULT_LON", "11.0039"))
 _CSV_FIELDS = ["timestamp_iso","epoch","label","from_id","portnum",
                "rx_rssi","rx_snr","hop_limit","lat","lon","text"]
 
@@ -144,7 +147,7 @@ def on_receive(packet, interface):
 
     # Fallback bei fehlendem GPS-Fix
     if lat == 0.0 or lon == 0.0:
-        lat, lon = 48.5748, 13.3802 
+        lat, lon = DEFAULT_LAT, DEFAULT_LON
 
     reply_msg = ""
     cmd = text.lower()
